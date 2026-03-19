@@ -1,0 +1,18 @@
+{
+  "name": "小狗钱钱",
+  "short_name": "钱钱",
+  "description": "让每一分钱都有归宿",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFF7ED",
+  "theme_color": "#F97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
