@@ -1,4 +1,4 @@
-const CACHE = 'xgqq-v1';
+const CACHE = 'xgqq-v2';
 const ASSETS = [
   './',
   './index.html',
