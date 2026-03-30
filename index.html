@@ -466,19 +466,24 @@ function refreshSummary(p){
 }
 
 function showTxModal(p,existingTx){
-  const isEdit=!!existingTx,today=new Date().toISOString().slice(0,10);
+  const isEdit=!!existingTx,today=new Date().toISOString().slice(0,10),selInput=!isEdit||existingTx.type==='input';
   const bg=document.createElement('div');bg.className='modal-bg';
   bg.innerHTML=`<div class="modal">
     <div class="modal-header"><h3>${isEdit?'✏️ 编辑收支记录':'➕ 添加收支记录'}</h3>
       <button class="modal-close" id="modal-close">✕</button></div>
     <div class="modal-body">
-      <div class="form-group"><label>类型</label><div class="flex-row">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-          <input type="radio" name="tx-type" value="input" ${(!isEdit||existingTx.type==='input')?'checked':''}>
-          <span style="font-weight:600;color:var(--green)">📥 存入</span></label>
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-          <input type="radio" name="tx-type" value="output" ${(isEdit&&existingTx.type==='output')?'checked':''}>
-          <span style="font-weight:600;color:var(--red)">📤 支出</span></label></div></div>
+      <div class="form-group"><label>类型</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-top:6px">
+          <label style="cursor:pointer;display:block">
+            <input type="radio" name="tx-type" value="input" ${selInput?'checked':''} style="position:absolute;opacity:0;pointer-events:none">
+            <div id="tx-type-in-btn" style="text-align:center;padding:12px 8px;font-weight:700;font-size:.95rem;color:${selInput?'#fff':'var(--green)'};background:${selInput?'var(--green)':'#fff'};border-right:1px solid var(--border);transition:.15s">📥 存入</div>
+          </label>
+          <label style="cursor:pointer;display:block">
+            <input type="radio" name="tx-type" value="output" ${selInput?'':'checked'} style="position:absolute;opacity:0;pointer-events:none">
+            <div id="tx-type-out-btn" style="text-align:center;padding:12px 8px;font-weight:700;font-size:.95rem;color:${selInput?'var(--red)':'#fff'};background:${selInput?'#fff':'var(--red)'};transition:.15s">📤 支出</div>
+          </label>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group"><label>金额（¥）<span style="color:var(--red)">*</span></label>
           <input id="tx-amount" type="number" min="0.01" step="0.01" placeholder="0.00" value="${isEdit?existingTx.amount:''}">
@@ -525,7 +530,13 @@ function showTxModal(p,existingTx){
       <button class="btn btn-primary" id="modal-save">💾 保存</button></div></div>`;
   document.body.appendChild(bg);
   bg.querySelectorAll('[name=tx-type]').forEach(r=>{
-    r.addEventListener('change',()=>document.getElementById('label-group').style.display=r.value==='output'?'':'none');});
+    r.addEventListener('change',()=>{
+      const isIn=r.value==='input';
+      document.getElementById('label-group').style.display=isIn?'none':'';
+      const inBtn=document.getElementById('tx-type-in-btn'),outBtn=document.getElementById('tx-type-out-btn');
+      inBtn.style.background=isIn?'var(--green)':'#fff';inBtn.style.color=isIn?'#fff':'var(--green)';
+      outBtn.style.background=isIn?'#fff':'var(--red)';outBtn.style.color=isIn?'var(--red)':'#fff';
+    });});
   const txLabelSel=document.getElementById('tx-label');
   const newLabelWrap=document.getElementById('new-label-wrap');
   const newLabelInp=document.getElementById('new-label-input');
