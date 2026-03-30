@@ -318,6 +318,7 @@ function renderProject(app,p){
   app.innerHTML=`
   <div class="breadcrumb"><a id="bc-home">🏠 首页</a><span>›</span><span>${p.name||p.description}</span>
     <button class="btn btn-ghost btn-xs ml-auto" id="btn-edit">✏️ 编辑</button>
+    <button class="btn btn-danger btn-xs" id="btn-del-proj">🗑 删除</button>
     <button class="btn btn-primary btn-xs" id="btn-add-tx">＋ 记录</button></div>
   <div class="summary-bar">
     <div class="summary-item"><div class="val val-open" id="s-open">${fmtMoney(bal.open)}</div><div class="lbl">初始余额</div></div>
@@ -356,6 +357,9 @@ function renderProject(app,p){
     <div class="table-wrap" id="tx-table-wrap"></div></div>`;
   document.getElementById('bc-home').addEventListener('click',()=>navigate('home'));
   document.getElementById('btn-edit').addEventListener('click',()=>navigate('edit-project',p.id));
+  document.getElementById('btn-del-proj').addEventListener('click',()=>{
+    if(!confirm(`确定要删除「${p.name||p.description}」吗？\n所有收支记录将被永久清除，无法恢复。`))return;
+    deleteProject(p.id);toast('🗑 项目已删除');navigate('home');});
   document.getElementById('btn-add-tx').addEventListener('click',()=>showTxModal(p,null));
   function buildChart1(s,e){
     if(charts.c1){charts.c1.destroy();delete charts.c1;}
